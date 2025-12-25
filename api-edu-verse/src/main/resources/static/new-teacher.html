@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduVerse - Cadastro de Professor</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; padding: 20px; }
+        .container { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
+        h2 { text-align: center; color: #2c3e50; margin-bottom: 20px; }
+
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; color: #666; font-weight: 600; font-size: 0.9rem; }
+        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
+        input:focus { border-color: #673AB7; outline: none; } /* Cor roxa para diferenciar */
+
+        button { width: 100%; padding: 12px; background-color: #673AB7; color: white; border: none; border-radius: 6px; font-size: 1rem; cursor: pointer; transition: 0.3s; font-weight: bold; margin-top: 10px; }
+        button:hover { background-color: #5E35B1; }
+
+        .hint { font-size: 0.8rem; color: #888; margin-top: 2px; }
+        #message { margin-top: 15px; text-align: center; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Novo Professor</h2>
+    <form id="teacherForm">
+
+        <div class="form-group">
+            <label>Nome (First Name)</label>
+            <input type="text" id="first_name" required placeholder="Ex: Roberto">
+        </div>
+
+        <div class="form-group">
+            <label>Sobrenome (Last Name)</label>
+            <input type="text" id="last_name" required placeholder="Ex: Silva">
+        </div>
+
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="email" required placeholder="prof.roberto@eduverse.com">
+        </div>
+
+        <div class="form-group">
+            <label>Senha</label>
+            <input type="password" id="password" required>
+        </div>
+
+        <div class="form-group">
+            <label>Matérias/Turmas (Classes)</label>
+            <input type="text" id="classes" placeholder="Ex: Matemática A, Física B">
+            <div class="hint">Separe por vírgula</div>
+        </div>
+
+        <button type="submit">Cadastrar Professor</button>
+    </form>
+    <div id="message"></div>
+</div>
+
+<script>
+    // IMPORTANTE: Verifique se a rota no seu TeacherController é esta mesma
+    const API_URL = "http://localhost:3080/teacher/new-teacher";
+
+    document.getElementById('teacherForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const toList = (str) => str ? str.split(',').map(item => item.trim()) : [];
+
+        // Construindo o JSON
+        // CUIDADO: As chaves (first_name, last_name) devem ser IGUAIS às variáveis no Java
+        const formData = {
+            first_name: document.getElementById('first_name').value,
+            last_name: document.getElementById('last_name').value,
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value,
+            classes: toList(document.getElementById('classes').value),
+            // tasksId ou tasks geralmente não são enviados na criação
+        };
+
+        const msgDiv = document.getElementById('message');
+        msgDiv.innerText = "Enviando...";
+        msgDiv.style.color = "blue";
+
+        console.log("JSON Enviado:", JSON.stringify(formData));
+
+        try {
+            const response = await fetch(API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+                msgDiv.innerText = "Professor cadastrado com sucesso!";
+                msgDiv.style.color = "green";
+                document.getElementById('teacherForm').reset();
+            } else {
+                const errorText = await response.text();
+                msgDiv.innerText = "Erro: " + response.status;
+                console.error("Erro detalhado:", errorText);
+                msgDiv.style.color = "red";
+            }
+        } catch (error) {
+            console.error(error);
+            msgDiv.innerText = "Erro ao conectar. O servidor está rodando?";
+            msgDiv.style.color = "red";
+        }
+    });
+</script>
+
+</body>
+</html>

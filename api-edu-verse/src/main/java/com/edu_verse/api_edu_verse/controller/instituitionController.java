@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
 @RequestMapping("/instituitions")
+@CrossOrigin(origins = "*")
 public class instituitionController {
 
     @Autowired
@@ -54,6 +56,25 @@ public class instituitionController {
 
         Instituition updated = instituitionRepository.save(instituition);
         return ResponseEntity.ok(updated);
+    }
+
+    // Rota do Dashboard (A que estava dando erro)
+    @GetMapping("/me")
+    public ResponseEntity<Instituition> getMyProfile() {
+        // Tenta buscar o primeiro do banco ou cria um fake
+        return instituitionRepository.findAll().stream().findFirst()
+                .map(found -> ResponseEntity.ok(found)) // Corrigido para evitar ambiguidade
+                .orElseGet(() -> {
+                    Instituition fake = new Instituition();
+                    fake.setName("Instituição Teste (Banco Vazio)");
+                    fake.setEmail("admin@teste.com");
+                    fake.setAge(10);
+                    fake.setDescription("Cadastre uma instituição real para ver dados reais.");
+                    fake.setClasses(Arrays.asList("Turma A", "Turma B"));
+                    fake.setTeachers(Arrays.asList("Prof. Java", "Prof. Spring"));
+                    fake.setStudents(Arrays.asList("Aluno 1", "Aluno 2"));
+                    return ResponseEntity.ok(fake);
+                });
     }
 
     @DeleteMapping("/delete-instituition/{id}")

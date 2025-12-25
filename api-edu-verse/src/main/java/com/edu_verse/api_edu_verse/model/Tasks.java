@@ -19,7 +19,9 @@ public class Tasks {
 
     private String task_context;
 
-    private String teacher;
+    @ManyToOne
+    @JoinColumn(name="teacher")
+    private Teacher teacher;
 
     @ElementCollection
     private List<String> classes;

@@ -40,7 +40,16 @@ public class studentController {
     }
 
     @PostMapping("/update-student")
-    public ResponseEntity<Student> updateStudent(@RequestBody Student student){
+    public ResponseEntity<Student> updateStudent(@RequestBody Student student, @CookieValue(value = "auth_token", defaultValue = "") String token
+    ){
+        if(!cookieService.isCookieValid(token)){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if(!studentRepository.existsById(student.getId())){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
         Student updateStudent = studentRepository.save(student);
         return ResponseEntity.status(HttpStatus.CREATED).body(updateStudent);
     }
