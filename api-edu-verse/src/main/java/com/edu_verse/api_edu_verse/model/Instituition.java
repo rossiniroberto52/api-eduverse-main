@@ -25,11 +25,14 @@ public class Instituition {
 
     private String description;
 
+    @OneToMany(mappedBy = "instituition")
+
     @ElementCollection
     private List<String> classes;
 
-    @ElementCollection
-    private List<String> teachers;
+    @ManyToOne
+    @JoinColumn(name="teacher")
+    private Teacher teacher;
 
     @ElementCollection
     private List<String> students;
