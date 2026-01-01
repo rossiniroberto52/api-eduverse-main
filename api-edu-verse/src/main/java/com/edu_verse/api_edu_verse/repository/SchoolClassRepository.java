@@ -1,10 +1,9 @@
 package com.edu_verse.api_edu_verse.repository;
 
-import com.edu_verse.api_edu_verse.model.Instituition;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import com.edu_verse.api_edu_verse.model.SchoolClass;
 
 @Repository
-public interface InstituitionRepository extends JpaRepository<Instituition, Long> {
-
+public interface SchoolClassRepository extends JpaRepository<SchoolClass, Long> {
 }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/teacher") // <--- Define o prefixo da URL
-public class teacherController {
+public class TeacherController {
 
     @Autowired
     private TeacherRepository teacherRepository;

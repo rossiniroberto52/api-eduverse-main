@@ -1,7 +1,7 @@
 package com.edu_verse.api_edu_verse.controller;
 
 import com.edu_verse.api_edu_verse.model.Student;
-import com.edu_verse.api_edu_verse.repository.studentRepository;
+import com.edu_verse.api_edu_verse.repository.StudentRepository;
 import com.edu_verse.api_edu_verse.service.cookieService;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -14,10 +14,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/students")
-public class studentController {
+public class StudentController {
 
     @Autowired
-    private studentRepository studentRepository;
+    private StudentRepository studentRepository;
 
     @Autowired
     private cookieService cookieService;

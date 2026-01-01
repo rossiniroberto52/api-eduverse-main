@@ -2,11 +2,10 @@ package com.edu_verse.api_edu_verse.controller;
 
 
 import com.edu_verse.api_edu_verse.model.Instituition;
-import com.edu_verse.api_edu_verse.repository.InstituitionRepository;
+import com.edu_verse.api_edu_verse.repository.InstitutionRepository;
 import com.edu_verse.api_edu_verse.service.cookieService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.Repository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,10 +18,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/instituitions")
 @CrossOrigin(origins = "*")
-public class instituitionController {
+public class InstitutionController {
 
     @Autowired
-    private InstituitionRepository instituitionRepository;
+    private InstitutionRepository institutionRepository;
     @Autowired
     private cookieService cookieService;
 
@@ -33,11 +32,11 @@ public class instituitionController {
     }
 
     @GetMapping("/get-instituition")
-    public List<Instituition> getInstituition() { return instituitionRepository.findAll(); }
+    public List<Instituition> getInstituition() { return institutionRepository.findAll(); }
 
     @PostMapping("/new-instituition")
     public ResponseEntity<Instituition> newInstituition(@RequestBody Instituition instituition) {
-        Instituition updateInstituition = instituitionRepository.save(instituition);
+        Instituition updateInstituition = institutionRepository.save(instituition);
         return ResponseEntity.status(HttpStatus.CREATED).body(updateInstituition);
     }
 
@@ -50,11 +49,11 @@ public class instituitionController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        if (instituition.getId() == null || !instituitionRepository.existsById(instituition.getId())) {
+        if (instituition.getId() == null || !institutionRepository.existsById(instituition.getId())) {
             return ResponseEntity.notFound().build();
         }
 
-        Instituition updated = instituitionRepository.save(instituition);
+        Instituition updated = institutionRepository.save(instituition);
         return ResponseEntity.ok(updated);
     }
 
@@ -62,7 +61,7 @@ public class instituitionController {
     @GetMapping("/me")
     public ResponseEntity<Instituition> getMyProfile() {
         // Tenta buscar o primeiro do banco ou cria um fake
-        return instituitionRepository.findAll().stream().findFirst()
+        return institutionRepository.findAll().stream().findFirst()
                 .map(found -> ResponseEntity.ok(found)) // Corrigido para evitar ambiguidade
                 .orElseGet(() -> {
                     Instituition fake = new Instituition();
@@ -85,11 +84,11 @@ public class instituitionController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        if(!instituitionRepository.existsById(id)){
+        if(!institutionRepository.existsById(id)){
             return ResponseEntity.notFound().build();
         }
 
-        instituitionRepository.deleteById(id);
+        institutionRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }
 }
